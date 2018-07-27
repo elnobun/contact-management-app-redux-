@@ -1,7 +1,14 @@
-import { GET_CONTACTS, ADD_CONTACTS, DELETE_CONTACTS } from '../actions/types';
+import {
+  GET_CONTACTS,
+  ADD_CONTACT,
+  DELETE_CONTACT,
+  GET_CONTACT,
+  UPDATE_CONTACT
+} from '../actions/types';
 
 const initialState = {
-  contacts: []
+  contacts: [],
+  contact: {}
 };
 
 export default (state = initialState, action) => {
@@ -12,14 +19,31 @@ export default (state = initialState, action) => {
         ...state,
         contacts: action.payload
       };
+    // get single contact
+    case GET_CONTACT:
+      return {
+        ...state,
+        contact: action.payload
+      };
     // add contacts through spread operator
-    case ADD_CONTACTS:
+    case ADD_CONTACT:
       return {
         ...state,
         contacts: [action.payload, ...state.contacts]
       };
+    // update contacts through mapping
+    case UPDATE_CONTACT:
+      return {
+        ...state,
+        contacts: state.contacts.map(
+          contact =>
+            contact.id === action.payload.id
+              ? (contact = action.payload)
+              : contact
+        )
+      };
     // delete contacts through filter
-    case DELETE_CONTACTS:
+    case DELETE_CONTACT:
       return {
         ...state,
         contacts: state.contacts.filter(

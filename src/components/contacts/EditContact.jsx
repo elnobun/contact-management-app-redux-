@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { getContact, updateContact } from '../../redux/actions/contactAction';
 import PropTypes from 'prop-types';
 import TextInputField from '../common/TextInputField';
 
@@ -10,7 +12,20 @@ class EditContact extends Component {
     errors: {}
   };
 
+  componentDidMount() {
+    const { id } = this.props.match.params;
+    this.props.getContact(id);
+  }
+
   // Populate the edit form with a particular id data.
+  componentWillReceiveProps(nextProps) {
+    const { name, email, phone } = nextProps.contact;
+    this.setState({
+      name,
+      email,
+      phone
+    });
+  }
 
   onHandleChange = e => {
     // Clear the error field as user types.
@@ -23,7 +38,7 @@ class EditContact extends Component {
     }
   };
 
-  onHandleSubmit = async (dispatch, e) => {
+  onHandleSubmit = e => {
     e.preventDefault();
     const { name, email, phone } = this.state;
 
@@ -49,7 +64,17 @@ class EditContact extends Component {
       return;
     }
 
+    const { id } = this.props.match.params;
+
+    const editContact = {
+      id,
+      name,
+      email,
+      phone
+    };
+
     // Update the new information
+    this.props.updateContact(editContact);
 
     // Clear the state
     this.setState({
@@ -63,7 +88,7 @@ class EditContact extends Component {
   };
   render() {
     const { name, email, phone, errors } = this.state;
-    const isEnabled = name.length > 0 && email.length > 0 && phone.length > 0;
+    // const isEnabled = name.length > 0 && email.length > 0 && phone.length > 0;
 
     return (
       <div className="card mb-3">
@@ -98,7 +123,7 @@ class EditContact extends Component {
               error={errors.phone}
             />
             <button
-              disabled={!isEnabled}
+              // disabled={!isEnabled}
               type="submit"
               className="btn btn-primary btn-block"
             >
@@ -114,7 +139,17 @@ class EditContact extends Component {
 EditContact.propTypes = {
   name: PropTypes.string,
   email: PropTypes.string,
-  phone: PropTypes.string
+  phone: PropTypes.string,
+  contact: PropTypes.object.isRequired,
+  getContact: PropTypes.func.isRequired,
+  updateContact: PropTypes.func.isRequired
 };
 
-export default EditContact;
+const mapStateToProps = state => ({
+  contact: state.contact.contact
+});
+
+export default connect(
+  mapStateToProps,
+  { getContact, updateContact }
+)(EditContact);

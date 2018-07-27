@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink as Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { deleteContact } from '../../redux/actions/contactAction';
 import PropTypes from 'prop-types';
 
 class Contact extends Component {
@@ -13,8 +15,9 @@ class Contact extends Component {
     });
   };
 
-  onDeleteList = async (id, dispatch) => {
+  onDeleteList = id => {
     // Delete Contact
+    this.props.deleteContact(id);
   };
 
   render() {
@@ -37,7 +40,7 @@ class Contact extends Component {
           <i
             className="fas fa-trash-alt"
             style={{ cursor: 'pointer', float: 'right', color: 'red' }}
-            onClick={this.onDeleteList}
+            onClick={this.onDeleteList.bind(this, id)}
           />
           <Link to={`contact/edit/${id}`}>
             <i
@@ -63,7 +66,11 @@ class Contact extends Component {
 }
 
 Contact.propTypes = {
-  contact: PropTypes.object.isRequired
+  contact: PropTypes.object.isRequired,
+  deleteContact: PropTypes.func.isRequired
 };
 
-export default Contact;
+export default connect(
+  null,
+  { deleteContact }
+)(Contact);

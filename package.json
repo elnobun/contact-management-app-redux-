@@ -2,7 +2,7 @@
   "name": "contactmanager",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://elnobun.github.io/contact-management-app",
+  "homepage": "https://elnobun.github.io/contact-management-app-redux-",
   "dependencies": {
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
